@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		45786CB81C0989A6005B840A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45786CB71C0989A6005B840A /* main.cpp */; };
-		45786CC51C0989F0005B840A /* City.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45786CC31C0989F0005B840A /* City.cpp */; };
+		45786CC51C0989F0005B840A /* TravellingSalesman.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45786CC31C0989F0005B840A /* TravellingSalesman.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,9 +29,9 @@
 		45786CBE1C0989C1005B840A /* cities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cities.h; sourceTree = "<group>"; };
 		45786CBF1C0989C1005B840A /* generate_mileage_table.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = generate_mileage_table.py; sourceTree = "<group>"; };
 		45786CC01C0989C1005B840A /* tsp_serial_recursive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tsp_serial_recursive.cpp; sourceTree = "<group>"; };
-		45786CC21C0989CF005B840A /* UniformCostSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UniformCostSearch.h; sourceTree = "<group>"; };
-		45786CC31C0989F0005B840A /* City.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = City.cpp; sourceTree = "<group>"; };
-		45786CC41C0989F0005B840A /* City.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = City.h; sourceTree = "<group>"; };
+		45786CC21C0989CF005B840A /* GraphSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphSearch.h; sourceTree = "<group>"; };
+		45786CC31C0989F0005B840A /* TravellingSalesman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TravellingSalesman.cpp; sourceTree = "<group>"; };
+		45786CC41C0989F0005B840A /* TravellingSalesman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TravellingSalesman.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,13 +64,13 @@
 		45786CB61C0989A6005B840A /* FinalProject */ = {
 			isa = PBXGroup;
 			children = (
-				45786CC21C0989CF005B840A /* UniformCostSearch.h */,
+				45786CC21C0989CF005B840A /* GraphSearch.h */,
 				45786CBE1C0989C1005B840A /* cities.h */,
 				45786CBF1C0989C1005B840A /* generate_mileage_table.py */,
 				45786CC01C0989C1005B840A /* tsp_serial_recursive.cpp */,
 				45786CB71C0989A6005B840A /* main.cpp */,
-				45786CC31C0989F0005B840A /* City.cpp */,
-				45786CC41C0989F0005B840A /* City.h */,
+				45786CC31C0989F0005B840A /* TravellingSalesman.cpp */,
+				45786CC41C0989F0005B840A /* TravellingSalesman.h */,
 			);
 			path = FinalProject;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45786CC51C0989F0005B840A /* City.cpp in Sources */,
+				45786CC51C0989F0005B840A /* TravellingSalesman.cpp in Sources */,
 				45786CB81C0989A6005B840A /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -249,6 +249,7 @@
 				45786CBD1C0989A6005B840A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

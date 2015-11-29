@@ -7,23 +7,49 @@
 //
 
 #include <iostream>
-#include "UniformCostSearch.h"
-#include "City.h"
+#include "GraphSearch.h"
+#include "TravellingSalesman.h"
 #include "cities.h"
 
 int main(int argc, const char * argv[]) {
-    UniformCostSearch<City> ucsSearch;
+    GraphSearch<TravellingSalesman> graphSearch;
     std::vector<unsigned int> previous;
     previous.push_back(0);
-    City start(0,0,0,previous);
+    TravellingSalesman start(0,0,0,previous);
     
-    auto result = ucsSearch.UniformSearchBnB(start, start);
+    std::cout << "======UCS Result======" << std::endl;
+    auto result = graphSearch.UniformSearch(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
     for (size_t i=0; i<result.size(); i++) {
-        if (i==0) {
-            result.at(0).getPrevious()->printNode();
-        }
         result.at(i).printNode();
     }
     
+    std::cout << std::endl << "======UCS BnB Result======" << std::endl;
+    result = graphSearch.UniformSearchBnB(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    for (size_t i=0; i<result.size(); i++) {
+        result.at(i).printNode();
+    }
+    
+    std::cout << std::endl << "======A* Result======" << std::endl;
+    result = graphSearch.AStarSearch(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    for (size_t i=0; i<result.size(); i++) {
+        result.at(i).printNode();
+    }
+    
+    std::cout << std::endl << "======BFS Result======" << std::endl;
+    result = graphSearch.BreadthFirstSearch(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    for (size_t i=0; i<result.size(); i++) {
+        result.at(i).printNode();
+    }
+    
+    std::cout << std::endl << "======DFS Result======" << std::endl;
+    result = graphSearch.DepthFirstSearch(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    for (size_t i=0; i<result.size(); i++) {
+        result.at(i).printNode();
+    }
     return 0;
 }
