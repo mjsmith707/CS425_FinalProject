@@ -360,8 +360,6 @@ class GraphSearch {
             std::unordered_set<std::shared_ptr<T>, THash<T>, TEqual<T>> explored;
             exploredCount = 0;
             
-            // BFS Algorithm
-            node->setCost(0);
             frontier.push(node);
             
             for (;;) {
@@ -434,8 +432,6 @@ class GraphSearch {
             std::unordered_set<std::shared_ptr<T>, THash<T>, TEqual<T>> explored;
             exploredCount = 0;
             
-            // BFS Algorithm
-            node->setCost(0);
             frontier.push(node);
             
             for (;;) {
