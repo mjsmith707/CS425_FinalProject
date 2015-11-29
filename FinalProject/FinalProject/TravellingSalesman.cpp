@@ -96,8 +96,7 @@ bool TravellingSalesman::isGoal(TravellingSalesman& goal) {
         return false;
     }
     else {
-        bool result = this->previousCities.size() == num_cities+1;
-        return result;
+        return this->previousCities.size() == num_cities+1;
     }
 }
 
