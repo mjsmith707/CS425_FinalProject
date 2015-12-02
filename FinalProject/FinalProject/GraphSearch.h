@@ -377,9 +377,11 @@ class GraphSearch {
                 // Check if goal and save the pointer if it is
                 if (node->isGoal(goal)) {
                     lastNode = node;
+                    break;
                 }
                 
                 // Find neighbors
+                bool leave = false;
                 std::vector<std::shared_ptr<T>> candidates = node->neighbors();
                 for (auto& n : candidates) {
                     // Check if already explored
@@ -391,14 +393,17 @@ class GraphSearch {
                         explored.emplace(n);
                         
                         // Check if goal and save the pointer if it is
+                        
                         if (n->isGoal(goal)) {
                             lastNode = n;
+                            leave = true;
                         }
                         
                         // Place in queue
                         frontier.push(n);
                     }
                 }
+                if (leave) break;
             }
             
             if (lastNode == nullptr) {
