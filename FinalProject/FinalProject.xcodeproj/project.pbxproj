@@ -32,6 +32,7 @@
 		45786CC21C0989CF005B840A /* GraphSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphSearch.h; sourceTree = "<group>"; };
 		45786CC31C0989F0005B840A /* TravellingSalesman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TravellingSalesman.cpp; sourceTree = "<group>"; };
 		45786CC41C0989F0005B840A /* TravellingSalesman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TravellingSalesman.h; sourceTree = "<group>"; };
+		5070A3F21C116A5B0065C218 /* SharedQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedQueue.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +72,7 @@
 				45786CB71C0989A6005B840A /* main.cpp */,
 				45786CC31C0989F0005B840A /* TravellingSalesman.cpp */,
 				45786CC41C0989F0005B840A /* TravellingSalesman.h */,
+				5070A3F21C116A5B0065C218 /* SharedQueue.h */,
 			);
 			path = FinalProject;
 			sourceTree = "<group>";

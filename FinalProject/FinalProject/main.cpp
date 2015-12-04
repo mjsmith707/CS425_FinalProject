@@ -51,5 +51,13 @@ int main(int argc, const char * argv[]) {
     for (size_t i=0; i<result.size(); i++) {
         result.at(i).printNode();
     }
+    
+    std::cout << std::endl << "======Parallel UCS B&B Result======" << std::endl;
+    result = graphSearch.ParallelUniformCostSearchBnB(start, start);
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    for (size_t i=0; i<result.size(); i++) {
+        result.at(i).printNode();
+    }
+    
     return 0;
 }
