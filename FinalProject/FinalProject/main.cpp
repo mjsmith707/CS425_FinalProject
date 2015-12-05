@@ -38,23 +38,26 @@ int main(int argc, const char * argv[]) {
         result.at(i).printNode();
     }
     
-    std::cout << std::endl << "======BFS Result======" << std::endl;
-    result = graphSearch.BreadthFirstSearch(start, start);
-    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
-    for (size_t i=0; i<result.size(); i++) {
-        result.at(i).printNode();
-    }
-    
-    std::cout << std::endl << "======DFS Result======" << std::endl;
-    result = graphSearch.DepthFirstSearch(start, start);
-    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
-    for (size_t i=0; i<result.size(); i++) {
-        result.at(i).printNode();
-    }
+    // too slow for more than 5 or 6 cities
+    /*
+     std::cout << std::endl << "======BFS Result======" << std::endl;
+     result = graphSearch.BreadthFirstSearch(start, start);
+     std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+     for (size_t i=0; i<result.size(); i++) {
+     result.at(i).printNode();
+     }
+     
+     std::cout << std::endl << "======DFS Result======" << std::endl;
+     result = graphSearch.DepthFirstSearch(start, start);
+     std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+     for (size_t i=0; i<result.size(); i++) {
+     result.at(i).printNode();
+     }
+     */
     
     std::cout << std::endl << "======Parallel UCS B&B Result======" << std::endl;
     result = graphSearch.ParallelUniformCostSearchBnB(start, start);
-    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    std::cout << "Explored Size: " << graphSearch.getLastExploredCountAtomic() << std::endl;
     for (size_t i=0; i<result.size(); i++) {
         result.at(i).printNode();
     }

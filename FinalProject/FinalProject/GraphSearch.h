@@ -49,10 +49,14 @@
 #include <stack>            // std::stack
 #include <queue>            // std::queue
 #include <thread>           // std::thread
+#include <atomic>           // std::atomic
+#include <utility>          // std::pair
 #include "SharedQueue.h"    // Shared_Queue (task queue)
 
 // number of threads to run the parallel BFS with
 #define N_THREADS 4
+
+// number of tasks per thread minimum we're hoping to run
 #define N_TASKS_PER_THREAD 2
 
 // unordered_set hash override call to
@@ -93,6 +97,7 @@ private:
     
     // Count of explored nodes for most recently ran search
     size_t exploredCount;
+    std::atomic<size_t> exploredCountAtomic;
     
 public:
     // Default Constructor
@@ -102,6 +107,12 @@ public:
     // Getter for nodes explored
     size_t getLastExploredCount() {
         return exploredCount;
+    }
+    
+    // Getter for nodes explored
+    size_t getLastExploredCountAtomic() const {
+        size_t tmp = exploredCountAtomic;
+        return tmp;
     }
     
     // Standard Uniform Cost Search
@@ -507,21 +518,23 @@ public:
         
         // threads that get spawned
         std::vector<std::thread*> threads;
-
+        
         // shared memory for the threads to throw results into
         std::vector<std::shared_ptr<T>>* results = new std::vector<std::shared_ptr<T>>();
-
+        
         // size to take the task queue to
         size_t taskQueueSize = N_THREADS * N_TASKS_PER_THREAD;
         
+        exploredCountAtomic = 0;
         exploredCount = 0;
+        
         frontier.push(node);
-
+        
         for (;;) {
             if (frontier.empty()) {
                 break;
             }
-            
+
             // Dequeue top node from frontier
             node = frontier.front();
             frontier.pop();
@@ -531,10 +544,6 @@ public:
             
             // Find neighbors
             std::vector<std::shared_ptr<T>> candidates = node->neighbors();
-            if(frontier.size() + candidates.size() > taskQueueSize){
-                std::cout << "settled on " << frontier.size() << " (out of " << taskQueueSize << ") for task queue size" << std::endl;
-                break;
-            }
             for (auto& n : candidates) {
                 // Check if already explored
                 if (explored.find(n) == explored.end()) {
@@ -543,47 +552,98 @@ public:
                     
                     // Place in explored
                     explored.emplace(n);
-                    
                     // Place in queue
                     frontier.push(n);
                 }
             }
+            
+            // if this is true, fulfilled our predefined criteria for the task queue size, so stop the BFS here
+            if(frontier.size() + candidates.size() > taskQueueSize){
+                break;
+            }
         }
-        
+  
+        // how much work is in the task queue
         size_t actualTaskQueueSize = frontier.size();
-        Shared_Queue<std::shared_ptr<T>>* taskQueue = new Shared_Queue<std::shared_ptr<T>>();
+
+        // to my understanding, don't need to have an index for each completed task in the shared results vector,
+        // and instead just have one slot per thread; since the result of the task is a final cost, on completion of
+        // any additional assigned tasks, the thread compares the just-completed cost with the existing cost
+        // and replaces if the just-completed cost is lower than existing cost
+        
+        // the size_t of the pair will tell each thread where to put the completed task result in the sharedResults vector
+        Shared_Queue<std::pair<std::shared_ptr<T>, size_t>>* taskQueue = new Shared_Queue<std::pair<std::shared_ptr<T>, size_t>>();
+        
+        // this is our shared memory that we will coalesce results into, and then reduce from
         results->resize(actualTaskQueueSize);
         
-        // spawn our threads on the first bits of work and add them to our thread pool
-        for(size_t i = 0; i < actualTaskQueueSize; i++){
-            T temp(*frontier.front());
-            //std::thread* UCSThread = new std::thread(&GraphSearch::ForParallelUniformSearchBnB, this, temp, start, i, results);
-            std::thread* UCSThread = new std::thread(&GraphSearch::RunTasks, this, taskQueue, results);
+        // add the whole frontier into the task queue
+        size_t resultsIdx = 0;
+        while(frontier.size() != 0){
+            std::shared_ptr<T> temp(frontier.front());
+            std::pair<std::shared_ptr<T>, size_t> taskPair(temp, resultsIdx++);
+            taskQueue->push(taskPair);
             frontier.pop();
+        }
+        
+        // spawn worker threads and start them on the task queue
+        for(size_t i = 0; i < actualTaskQueueSize; i++){
+            //std::thread* UCSThread = new std::thread(&GraphSearch::ForParallelUniformSearchBnB, this, temp, start, i, results);
+            std::thread* UCSThread = new std::thread(&GraphSearch::RunTasks, this, taskQueue, goal, results);
             threads.push_back(UCSThread);
         }
         
+        // threads should be done with the task queue here
         for(int i = 0; i < threads.size(); i++){
             threads[i]->join();
         }
         
+        std::shared_ptr<T> bestNode;
+        bestNode = results->front();
+       
+        // simple reduction, finding the lowest-cost node
+        for(size_t i = 1; i < results->size(); i++){
+            if((*results)[i]->getCost() < bestNode->getCost()){
+                bestNode = (*results)[i];
+            }
+        }
+        
+        // find the whole path
+        while (bestNode->getPrevious() != nullptr) {
+            T temp = (*bestNode);
+            solution.insert(solution.begin(), temp);
+            bestNode = bestNode->getPrevious();
+        }
+        solution.insert(solution.begin(), start);
+
         return solution;
-        
     }
     
-    void RunTasks (Shared_Queue<std::shared_ptr<T>>* taskQueue, std::vector<std::shared_ptr<T>>* sharedResults){
-        
+    void RunTasks(Shared_Queue<std::pair<std::shared_ptr<T>, size_t>>* taskQueue, T goal, std::vector<std::shared_ptr<T>>* sharedResults){
+        while(!taskQueue->isEmpty()){
+            
+            // try-catch because there's a potential race between the isEmpty() timing and
+            try{
+                std::pair<std::shared_ptr<T>, size_t> currentTaskNode = taskQueue->pop();
+                
+                // run the ucs search on the task this thread picked up from the task queue
+                ForParallelUniformSearchBnB(*(currentTaskNode.first),goal, currentTaskNode.second, sharedResults);
+            } catch(std::runtime_error e){
+                
+                // nothing left in the task queue, so this thread can leave
+                return;
+            }
+        }
     }
     
-    // Uniform Cost Search with Branch and Bound
+    // Uniform Cost Search with Branch and Bound, to be called by individual threads which will put result into a shared memory array
     void ForParallelUniformSearchBnB(T start, T goal, size_t sharedResultIdx, std::vector<std::shared_ptr<T>>* sharedResults) {
         // Eventual solution
         std::vector<T> solution;
         std::shared_ptr<T> best;
         
-        // Copy start node
+        // Copy start node (don't reset anything)
         std::shared_ptr<T> node(new T(start));
-        node->setCost(0);
         
         // Initialize Data Structures
         std::vector<std::shared_ptr<T>> frontier;
@@ -650,19 +710,11 @@ public:
             }
         }
         
-        // best is the solution
-        // Find path
-        /*
-        while (best->getPrevious() != nullptr) {
-            T temp = (*best);
-            solution.insert(solution.begin(), temp);
-            best = best->getPrevious();
-        }
-        solution.insert(solution.begin(), start);
-        */
+        exploredCountAtomic += explored.size();
         
-        sharedResults[sharedResultIdx] = best;
-        //exploredCount = explored.size();
+        // throw the best result into the shared array
+        // the reduction happens in thread0 after all is done anyways, so don't bother generating the whole path list here
+        (*sharedResults)[sharedResultIdx] = best;
     }
     
 };

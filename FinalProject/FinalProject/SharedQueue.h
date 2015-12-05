@@ -27,7 +27,7 @@ public:
         try {
             std::lock_guard<std::mutex> lock(queueMutex);
             if (!sharedQueue.empty()) {
-                std::string result = sharedQueue.front();
+                T result = sharedQueue. front();
                 sharedQueue.pop();
                 return result;
             }
@@ -40,7 +40,7 @@ public:
         }
     }
     
-    void push(T& input) {
+    void push(T input) {
         std::lock_guard<std::mutex> lock(queueMutex);
         sharedQueue.push(input);
     }
