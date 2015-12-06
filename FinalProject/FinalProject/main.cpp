@@ -12,11 +12,16 @@
 #include "TravellingSalesman.h"
 #include "cities.h"
 
+typedef std::chrono::high_resolution_clock::time_point timept_t;
+typedef std::chrono::duration<double> timer_duration_t;
+
 int main(int argc, const char * argv[]) {
     GraphSearch<TravellingSalesman> graphSearch;
     std::vector<unsigned int> previous;
     previous.push_back(0);
     TravellingSalesman start(0,0,0,previous);
+    timept_t startTime, endTime;
+    timer_duration_t duration;
     /*
     std::cout << "======UCS Result======" << std::endl;
     auto result = graphSearch.UniformSearch(start, start);
@@ -26,8 +31,12 @@ int main(int argc, const char * argv[]) {
     }
     */
     std::cout << std::endl << "======UCS BnB Result======" << std::endl;
+    
+    startTime = std::chrono::high_resolution_clock::now();
     auto result = graphSearch.UniformSearchBnB(start, start);
-    std::cout << "Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+    std::cout << "Duration: " << duration.count() << ", Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
     for (size_t i=0; i<result.size(); i++) {
         result.at(i).printNode();
     }
@@ -40,8 +49,11 @@ int main(int argc, const char * argv[]) {
     }
     */
     std::cout << std::endl << "======Max's Parallel UCS B&B Result======" << std::endl;
+    startTime = std::chrono::high_resolution_clock::now();
     result = graphSearch.ParallelUniformCostSearchBnB(start, start);
-    std::cout << "Explored Size: " << graphSearch.getLastExploredCountAtomic() << std::endl;
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+    std::cout << "Duration: " << duration.count() << ", Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
     for (size_t i=0; i<result.size(); i++) {
         result.at(i).printNode();
     }
@@ -49,8 +61,11 @@ int main(int argc, const char * argv[]) {
     // My impl
     ParallelSearch<TravellingSalesman> parallelSearch;
     std::cout << std::endl << "======Matt's Parallel UCS B&B Result======" << std::endl;
+    startTime = std::chrono::high_resolution_clock::now();
     result = parallelSearch.ParallelGraphSearch(start, start, 4);
-    //std::cout << "Explored Size: " << graphSearch.getLastExploredCountAtomic() << std::endl;
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+    std::cout << "Duration: " << duration.count() << ", Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
     for (size_t i=0; i<result.size(); i++) {
         result.at(i).printNode();
     }
