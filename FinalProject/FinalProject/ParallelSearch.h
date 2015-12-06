@@ -249,7 +249,7 @@ public:
                 for (threadsSpawned=0; (threadsSpawned<numThreads) && (threadsSpawned<frontier.size()); threadsSpawned++) {
                     auto startNode = frontier.front();
                     frontier.pop();
-                    results.push_back(std::async(&ParallelSearch::UniformSearchBnB, this, startNode, goal));
+                    results.push_back(std::async(std::launch::async, &ParallelSearch::UniformSearchBnB, this, startNode, goal));
                 }
                 // Wait for results
                 for (auto& i : results) {
@@ -260,7 +260,7 @@ public:
                     // Get result
                     auto futureRes = results.at(i).get();
                     if (futureRes.size() > 0) {
-                        if (futureRes[0].getCost() < lowestSolution[0].getCost()) {
+                        if (futureRes.at(futureRes.size()-1).getCost() < lowestSolution.at(lowestSolution.size()-1).getCost()) {
                             lowestSolution = futureRes;
                         }
                     }
