@@ -32,6 +32,7 @@
 		45786CC21C0989CF005B840A /* GraphSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphSearch.h; sourceTree = "<group>"; };
 		45786CC31C0989F0005B840A /* TravellingSalesman.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TravellingSalesman.cpp; sourceTree = "<group>"; };
 		45786CC41C0989F0005B840A /* TravellingSalesman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TravellingSalesman.h; sourceTree = "<group>"; };
+		45DFB96C1C13DC98006AC8DD /* ParallelSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallelSearch.h; sourceTree = "<group>"; };
 		5070A3F21C116A5B0065C218 /* SharedQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SharedQueue.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				45786CC21C0989CF005B840A /* GraphSearch.h */,
+				45DFB96C1C13DC98006AC8DD /* ParallelSearch.h */,
 				45786CBE1C0989C1005B840A /* cities.h */,
 				45786CBF1C0989C1005B840A /* generate_mileage_table.py */,
 				45786CC01C0989C1005B840A /* tsp_serial_recursive.cpp */,
