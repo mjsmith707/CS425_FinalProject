@@ -18,6 +18,8 @@
 #include <queue>            // std::queue
 #include <thread>           // std::thread
 #include <future>           // std::future
+#include <atomic>           // std::atomic
+#include <iostream>
 
 // unordered_set hash override call to
 // T's hashState()
@@ -59,7 +61,7 @@ private:
     size_t exploredCount;
     
     // Uniform Cost Search with Branch and Bound
-    std::vector<T> UniformSearchBnB(std::shared_ptr<T> start, T goal) {
+    std::vector<T> UniformSearchBnB(std::shared_ptr<T> start, T goal, std::atomic<size_t>* upperBound) {
         // Eventual solution
         std::vector<T> solution;
         std::shared_ptr<T> best;
@@ -72,7 +74,7 @@ private:
         std::make_heap(frontier.begin(), frontier.end(), costComparator);
         std::unordered_set<std::shared_ptr<T>, PTHash<T>, PTEqual<T>> explored;
         //exploredCount = 0;
-        size_t upperBound = std::numeric_limits<size_t>::max();
+        
         
         // Enqueue start
         frontier.push_back(node);
@@ -94,12 +96,13 @@ private:
             // Is this the goal state?
             if (node->isGoal(goal)) {
                 best = node;
-                upperBound = node->getCost();
+                (*upperBound) = node->getCost();
+                std::cout << "New Upper Bound = " << (*upperBound) << std::endl;
                 break;
             }
             
             // Is this above the upper bound?
-            if (node->getCost() >= upperBound) {
+            if (node->getCost() >= (*upperBound)) {
                 continue;
             }
             
@@ -107,13 +110,14 @@ private:
             std::vector<std::shared_ptr<T>> candidates = node->neighbors();
             for (auto& n : candidates) {
                 // Skip if >= upperBound
-                if ((n->getCost() + node->getCost()) >= upperBound) {
+                if ((n->getCost() + node->getCost()) >= (*upperBound)) {
                     continue;
                 }
                 // If its the goal and lower, update best
                 if (n->isGoal(goal)) {
                     best = n;
-                    upperBound = n->getCost() + node->getCost();
+                    (*upperBound) = n->getCost() + node->getCost();
+                    std::cout << "New Upper Bound = " << (*upperBound) << std::endl;
                 }
                 // Update previous pointer
                 n->setPrevious(node);
@@ -216,6 +220,68 @@ private:
         return solution;
     }
     
+    // Depth First Search
+    std::vector<T> DepthFirstSearch(std::shared_ptr<T> start, T goal, std::atomic<size_t>* upperBound) {
+        // Eventual solution
+        std::vector<T> solution;
+        std::shared_ptr<T> lastNode = nullptr;
+        
+        // Copy start node
+        std::shared_ptr<T> node(new T((*start)));
+        
+        // Initialize Data Structures
+        std::stack<std::shared_ptr<T>> frontier;
+        std::unordered_set<unsigned int> explored;
+        
+        frontier.push(node);
+        
+        for (;;) {
+            if (frontier.empty()) {
+                break;
+            }
+            
+            // Dequeue top node from frontier
+            node = frontier.top();
+            frontier.pop();
+            
+            // Is this above the upper bound?
+            if (node->getCost() >= (*upperBound)) {
+                continue;
+            }
+            
+            // Check if goal and save the pointer if it is
+            if (node->isGoal(goal) && node->getCost() < (*upperBound)) {
+                lastNode = node;
+                (*upperBound) = node->getCost();
+                std::cout << "New Upper Bound = " << (*upperBound) << std::endl;
+            }
+            
+            // Find neighbors
+            std::vector<std::shared_ptr<T>> candidates = node->neighbors();
+            for (auto& n : candidates) {
+                n->setCost(n->getCost() + node->getCost());
+                n->setPrevious(node);
+                
+                // Place in queue
+                frontier.push(n);
+            }
+        }
+        
+        if (lastNode == nullptr) {
+            throw std::runtime_error("No solution was found.");
+        }
+        
+        // Find path
+        while (lastNode->getPrevious() != nullptr) {
+            T temp = (*lastNode);
+            solution.insert(solution.begin(), temp);
+            lastNode = lastNode->getPrevious();
+        }
+        
+        exploredCount = explored.size();
+        return solution;
+    }
+    
 public:
     // Default Constructor
     ParallelSearch() : exploredCount(0) {
@@ -242,6 +308,7 @@ public:
             temp.setCost(std::numeric_limits<size_t>::max());
             std::vector<T> lowestSolution;
             lowestSolution.push_back(temp);
+            std::atomic<size_t> upperBound(std::numeric_limits<size_t>::max());
             while (frontier.size() > 0) {
                 std::vector<std::future<std::vector<T>>> results;
                 size_t threadsSpawned = 0;
@@ -249,7 +316,7 @@ public:
                 for (threadsSpawned=0; (threadsSpawned<numThreads) && (threadsSpawned<frontier.size()); threadsSpawned++) {
                     auto startNode = frontier.front();
                     frontier.pop();
-                    results.push_back(std::async(std::launch::async, &ParallelSearch::UniformSearchBnB, this, startNode, goal));
+                    results.push_back(std::async(std::launch::async, &ParallelSearch::DepthFirstSearch, this, startNode, goal, &upperBound));
                 }
                 // Wait for results
                 for (auto& i : results) {
@@ -258,11 +325,16 @@ public:
                 // Find the best solution
                 for (size_t i=0; i<results.size(); i++) {
                     // Get result
-                    auto futureRes = results.at(i).get();
-                    if (futureRes.size() > 0) {
-                        if (futureRes.at(futureRes.size()-1).getCost() < lowestSolution.at(lowestSolution.size()-1).getCost()) {
-                            lowestSolution = futureRes;
+                    try {
+                        auto futureRes = results.at(i).get();
+                        if (futureRes.size() > 0) {
+                            if (futureRes.at(futureRes.size()-1).getCost() < lowestSolution.at(lowestSolution.size()-1).getCost()) {
+                                lowestSolution = futureRes;
+                            }
                         }
+                    }
+                    catch (std::runtime_error& e) {
+                        // No result
                     }
                 }
                 
