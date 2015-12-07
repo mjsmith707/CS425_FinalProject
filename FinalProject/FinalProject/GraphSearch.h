@@ -587,9 +587,10 @@ public:
         }
         
         // spawn worker threads and start them on the task queue
+        std::atomic<size_t> upperBound(std::numeric_limits<size_t>::max());
         for(size_t i = 0; i < actualTaskQueueSize; i++){
             //std::thread* UCSThread = new std::thread(&GraphSearch::ForParallelUniformSearchBnB, this, temp, start, i, results);
-            std::thread* UCSThread = new std::thread(&GraphSearch::RunTasks, this, taskQueue, goal, results);
+            std::thread* UCSThread = new std::thread(&GraphSearch::RunTasks, this, taskQueue, goal, results, &upperBound);
             threads.push_back(UCSThread);
         }
         
@@ -619,7 +620,7 @@ public:
         return solution;
     }
     
-    void RunTasks(Shared_Queue<std::pair<std::shared_ptr<T>, size_t>>* taskQueue, T goal, std::vector<std::shared_ptr<T>>* sharedResults){
+    void RunTasks(Shared_Queue<std::pair<std::shared_ptr<T>, size_t>>* taskQueue, T goal, std::vector<std::shared_ptr<T>>* sharedResults, std::atomic<size_t>* upperBound){
         while(!taskQueue->isEmpty()){
             
             // try-catch because there's a potential race between the isEmpty() timing and
@@ -627,7 +628,8 @@ public:
                 std::pair<std::shared_ptr<T>, size_t> currentTaskNode = taskQueue->pop();
                 
                 // run the ucs search on the task this thread picked up from the task queue
-                ForParallelUniformSearchBnB(*(currentTaskNode.first),goal, currentTaskNode.second, sharedResults);
+                //ForParallelUniformSearchBnB(*(currentTaskNode.first),goal, currentTaskNode.second, sharedResults);
+                ForParallelDepthFirstSearch(*(currentTaskNode.first),goal, currentTaskNode.second, sharedResults, upperBound);
             } catch(std::runtime_error e){
                 
                 // nothing left in the task queue, so this thread can leave
@@ -715,6 +717,67 @@ public:
         // throw the best result into the shared array
         // the reduction happens in thread0 after all is done anyways, so don't bother generating the whole path list here
         (*sharedResults)[sharedResultIdx] = best;
+    }
+    
+    void ForParallelDepthFirstSearch(T start, T goal, size_t sharedResultIdx, std::vector<std::shared_ptr<T>>* sharedResults, std::atomic<size_t>* upperBound) {
+        // Eventual solution
+        std::vector<T> solution;
+        std::shared_ptr<T> lastNode = nullptr;
+        
+        // Copy start node
+        std::shared_ptr<T> node(new T(start));
+        
+        // Initialize Data Structures
+        std::stack<std::shared_ptr<T>> frontier;
+        std::unordered_set<unsigned int> explored;
+        
+        frontier.push(node);
+        
+        for (;;) {
+            if (frontier.empty()) {
+                break;
+            }
+            
+            // Dequeue top node from frontier
+            node = frontier.top();
+            frontier.pop();
+            
+            // Is this above the upper bound?
+            if (node->getCost() >= (*upperBound)) {
+                continue;
+            }
+            
+            // Check if goal and save the pointer if it is
+            if (node->isGoal(goal) && node->getCost() < (*upperBound)) {
+                lastNode = node;
+                (*upperBound) = node->getCost();
+                std::cout << "New Upper Bound = " << (*upperBound) << std::endl;
+            }
+            
+            // Find neighbors
+            std::vector<std::shared_ptr<T>> candidates = node->neighbors();
+            for (auto& n : candidates) {
+                n->setCost(n->getCost() + node->getCost());
+                n->setPrevious(node);
+                
+                // Place in queue
+                frontier.push(n);
+            }
+        }
+        
+        /*if (lastNode == nullptr) {
+            throw std::runtime_error("No solution was found.");
+        }
+        
+        // Find path
+        while (lastNode->getPrevious() != nullptr) {
+            T temp = (*lastNode);
+            solution.insert(solution.begin(), temp);
+            lastNode = lastNode->getPrevious();
+        }
+        */
+        exploredCountAtomic += explored.size();
+        (*sharedResults)[sharedResultIdx] = lastNode;
     }
     
 };
