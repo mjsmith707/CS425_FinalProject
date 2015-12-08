@@ -1,20 +1,20 @@
 //
-//  ParallelTSPDemo.cpp
+//  ParallelTravellingSalesmanDFS.cpp
 //  FinalProject
 //
 //  Created by Max on 12/6/15.
 //  Copyright (c) 2015 Matt. All rights reserved.
 //
 
-#include "ParallelTSPDemo.h"
+#include "ParallelTravellingSalesmanDFS.h"
 
 #define N_THREADS 4
 #define N_TASKS_PER_THREAD 10
 
-ParallelTSPDemo::Tour ParallelTSPDemo::runParallelDFS(unsigned int initialCity){
-    ParallelTSPDemo::Tour firstNode;
-    ParallelTSPDemo::Tour node;
-    std::queue<ParallelTSPDemo::Tour> frontier;
+ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDFS(unsigned int initialCity){
+    ParallelTravellingSalesmanDFS::Tour firstNode;
+    ParallelTravellingSalesmanDFS::Tour node;
+    std::queue<ParallelTravellingSalesmanDFS::Tour> frontier;
     frontier.push(firstNode);
     
     size_t sizeOfTaskQueue = N_THREADS * N_TASKS_PER_THREAD;
@@ -25,37 +25,37 @@ ParallelTSPDemo::Tour ParallelTSPDemo::runParallelDFS(unsigned int initialCity){
         
         for(int i = 0; i < num_cities && frontier.size() < sizeOfTaskQueue; i++){
             if(!node.is_present(i)){
-                ParallelTSPDemo::Tour neighbor = node;
+                ParallelTravellingSalesmanDFS::Tour neighbor = node;
                 neighbor.add_city(i);
                 frontier.push(neighbor);
             }
         }
     }
     
-    Shared_Queue<std::pair<unsigned int, ParallelTSPDemo::Tour>> taskQueue;
+    Shared_Queue<std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour>> taskQueue;
     
-    std::vector<ParallelTSPDemo::Tour> sharedResults;
+    std::vector<ParallelTravellingSalesmanDFS::Tour> sharedResults;
     std::vector<std::thread> threadPool;
     std::atomic<unsigned int> sharedBound(std::numeric_limits<unsigned int>::max());
     
     sharedResults.resize(sizeOfTaskQueue);
     
     for(unsigned int i = 0; i < sizeOfTaskQueue; i++){
-        ParallelTSPDemo::Tour tmp(frontier.front());
+        ParallelTravellingSalesmanDFS::Tour tmp(frontier.front());
         frontier.pop();
-        std::pair<unsigned int, ParallelTSPDemo::Tour> pairForTaskQueue = std::make_pair(i, tmp);
+        std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour> pairForTaskQueue = std::make_pair(i, tmp);
         taskQueue.push(pairForTaskQueue);
     }
     
     for(int i = 0; i < N_THREADS; i++){
-        threadPool.push_back(std::thread(&ParallelTSPDemo::RunAgainstTaskQueue, this, &taskQueue, &sharedResults, &sharedBound));
+        threadPool.push_back(std::thread(&ParallelTravellingSalesmanDFS::RunAgainstTaskQueue, this, &taskQueue, &sharedResults, &sharedBound));
     }
     
     for(int i = 0; i < N_THREADS; i++){
         threadPool[i].join();
     }
     
-    ParallelTSPDemo::Tour solution(std::numeric_limits<unsigned int>::max());
+    ParallelTravellingSalesmanDFS::Tour solution(std::numeric_limits<unsigned int>::max());
     for(int i = 0; i < sharedResults.size(); i++){
         if(sharedResults[i].better_than(solution)){
             solution = sharedResults[i];
@@ -65,15 +65,15 @@ ParallelTSPDemo::Tour ParallelTSPDemo::runParallelDFS(unsigned int initialCity){
     return solution;
 }
 
-void ParallelTSPDemo::RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, ParallelTSPDemo::Tour>>* taskQueue, std::vector<ParallelTSPDemo::Tour>* sharedResults, std::atomic<unsigned int>* sharedBound){
+void ParallelTravellingSalesmanDFS::RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour>>* taskQueue, std::vector<ParallelTravellingSalesmanDFS::Tour>* sharedResults, std::atomic<unsigned int>* sharedBound){
     while(!taskQueue->isEmpty()){
         
         // try-catch because there's a potential race between the isEmpty() timing and
         try{
-            std::pair<unsigned int, ParallelTSPDemo::Tour> currentTaskNode = taskQueue->pop();
-            ParallelTSPDemo::Tour localTour = currentTaskNode.second;
-            ParallelTSPDemo::Tour localBest(*sharedBound);
-            ParallelTSPDemo::DFS(localTour, localBest, sharedBound);
+            std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour> currentTaskNode = taskQueue->pop();
+            ParallelTravellingSalesmanDFS::Tour localTour = currentTaskNode.second;
+            ParallelTravellingSalesmanDFS::Tour localBest(*sharedBound);
+            ParallelTravellingSalesmanDFS::DFS(localTour, localBest, sharedBound);
             (*sharedResults)[currentTaskNode.first] = localBest;
             
             // Do an atomic compare and swap
@@ -88,7 +88,7 @@ void ParallelTSPDemo::RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, P
     }
 }
 
-void ParallelTSPDemo::DFS(ParallelTSPDemo::Tour& t, ParallelTSPDemo::Tour& best, std::atomic<unsigned int>* sharedBound) {
+void ParallelTravellingSalesmanDFS::DFS(ParallelTravellingSalesmanDFS::Tour& t, ParallelTravellingSalesmanDFS::Tour& best, std::atomic<unsigned int>* sharedBound) {
     if (!t.better_than(best, sharedBound)) return; // if we've already seen something better
     /*
     

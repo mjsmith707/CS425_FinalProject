@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		45BED0F51C169D3200707036 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45BED0F41C169D3200707036 /* main.cpp */; };
-		45BED0F91C169DA600707036 /* ParallelTSPDemo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45BED0F71C169DA600707036 /* ParallelTSPDemo.cpp */; };
+		45BED0F91C169DA600707036 /* ParallelTravellingSalesmanDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 45BED0F71C169DA600707036 /* ParallelTravellingSalesmanDFS.cpp */; };
+		5050BFDA1C16BA6B00180450 /* SerialTravellingSalesmanDFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5050BFD91C16BA6B00180450 /* SerialTravellingSalesmanDFS.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,9 +28,11 @@
 		45BED0EA1C169CFC00707036 /* FinalProjectParallel */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FinalProjectParallel; sourceTree = BUILT_PRODUCTS_DIR; };
 		45BED0F41C169D3200707036 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		45BED0F61C169D8F00707036 /* cities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cities.h; sourceTree = "<group>"; };
-		45BED0F71C169DA600707036 /* ParallelTSPDemo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParallelTSPDemo.cpp; sourceTree = "<group>"; };
-		45BED0F81C169DA600707036 /* ParallelTSPDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallelTSPDemo.h; sourceTree = "<group>"; };
+		45BED0F71C169DA600707036 /* ParallelTravellingSalesmanDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParallelTravellingSalesmanDFS.cpp; sourceTree = "<group>"; };
+		45BED0F81C169DA600707036 /* ParallelTravellingSalesmanDFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallelTravellingSalesmanDFS.h; sourceTree = "<group>"; };
 		45BED0FA1C169DD000707036 /* SharedQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SharedQueue.h; sourceTree = "<group>"; };
+		5050BFD81C16B9B900180450 /* SerialTravellingSalesmanDFS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SerialTravellingSalesmanDFS.h; sourceTree = "<group>"; };
+		5050BFD91C16BA6B00180450 /* SerialTravellingSalesmanDFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerialTravellingSalesmanDFS.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,10 +66,12 @@
 			isa = PBXGroup;
 			children = (
 				45BED0FA1C169DD000707036 /* SharedQueue.h */,
-				45BED0F71C169DA600707036 /* ParallelTSPDemo.cpp */,
-				45BED0F81C169DA600707036 /* ParallelTSPDemo.h */,
+				45BED0F71C169DA600707036 /* ParallelTravellingSalesmanDFS.cpp */,
+				45BED0F81C169DA600707036 /* ParallelTravellingSalesmanDFS.h */,
 				45BED0F61C169D8F00707036 /* cities.h */,
 				45BED0F41C169D3200707036 /* main.cpp */,
+				5050BFD81C16B9B900180450 /* SerialTravellingSalesmanDFS.h */,
+				5050BFD91C16BA6B00180450 /* SerialTravellingSalesmanDFS.cpp */,
 			);
 			path = FinalProjectParallel;
 			sourceTree = "<group>";
@@ -127,8 +132,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5050BFDA1C16BA6B00180450 /* SerialTravellingSalesmanDFS.cpp in Sources */,
 				45BED0F51C169D3200707036 /* main.cpp in Sources */,
-				45BED0F91C169DA600707036 /* ParallelTSPDemo.cpp in Sources */,
+				45BED0F91C169DA600707036 /* ParallelTravellingSalesmanDFS.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,6 +251,7 @@
 				45BED0F31C169CFC00707036 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

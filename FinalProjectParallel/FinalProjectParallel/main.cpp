@@ -9,7 +9,8 @@
 #include <iostream>
 #include <algorithm>
 #include "cities.h"
-#include "ParallelTSPDemo.h"
+#include "SerialTravellingSalesmanDFS.h"
+#include "ParallelTravellingSalesmanDFS.h"
 
 #define N_THREADS 4
 #define N_TASKS_PER_THREAD 10
@@ -25,16 +26,15 @@ int main(int argc, const char * argv[]) {
     std::cout << "num_cities: " << num_cities << ", N_THREADS: " << N_THREADS << std::endl;
     std::cout << std::endl << "======Max Parallel Given DFS serial implementation======" << std::endl;
     startTime = std::chrono::high_resolution_clock::now();
-    ParallelTSPDemo::Tour bestTour(std::numeric_limits<unsigned int>::max());
-    ParallelTSPDemo::Tour startTour;
-    ParallelTSPDemo::ParallelTSPDemo demoRun;
-    ParallelTSPDemo::Tour finalSolution = demoRun.runParallelDFS(0);
+    ParallelTravellingSalesmanDFS::Tour bestTour(std::numeric_limits<unsigned int>::max());
+    ParallelTravellingSalesmanDFS::Tour startTour;
+    ParallelTravellingSalesmanDFS::ParallelTravellingSalesmanDFS demoRun;
+    ParallelTravellingSalesmanDFS::Tour finalSolution = demoRun.runParallelDFS(0);
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
     std::cout << "Duration: " << duration.count();
     std::cout << finalSolution << std::endl;
     
-    /*
     std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
     startTime = std::chrono::high_resolution_clock::now();
     Tour t;
@@ -43,6 +43,6 @@ int main(int argc, const char * argv[]) {
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
     std::cout << "Duration: " << duration.count();
     std::cout << best << std::endl;
-    */
+
     return 0;
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinalProjectParallel/SerialTravellingSalesmanDFS.h"
+            timestampString = "471252948.985613"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "class Tour"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tour::~Tour()"
+                  moduleName = "FinalProjectParallel"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/max/Documents/cs/425/CS425_FinalProject/FinalProjectParallel/FinalProjectParallel/SerialTravellingSalesmanDFS.h"
+                  timestampString = "471252955.548558"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "16">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tour::operator=(Tour const&amp;)"
+                  moduleName = "FinalProjectParallel"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/max/Documents/cs/425/CS425_FinalProject/FinalProjectParallel/FinalProjectParallel/SerialTravellingSalesmanDFS.h"
+                  timestampString = "471252955.548791"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "20">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tour::~Tour()"
+                  moduleName = "FinalProjectParallel"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/max/Documents/cs/425/CS425_FinalProject/FinalProjectParallel/FinalProjectParallel/SerialTravellingSalesmanDFS.h"
+                  timestampString = "471252955.549009"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "16">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinalProjectParallel/SerialTravellingSalesmanDFS.cpp"
+            timestampString = "471252862.924291"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "12"
+            endingLineNumber = "12">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

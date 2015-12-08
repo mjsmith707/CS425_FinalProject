@@ -2,17 +2,15 @@
 #include <vector>
 #include <climits>
 #include <algorithm>
-#include "cities.h"
 #include <unordered_set>
 #include <queue>
 #include <thread>
+#include "cities.h"
 #include "SharedQueue.h"
+
 using namespace std;
 
-/*
- 
- */
-class ParallelTSPDemo {
+class ParallelTravellingSalesmanDFS{
 public:
     class Tour {
     public:
