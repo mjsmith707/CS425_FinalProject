@@ -79,7 +79,7 @@ class Tour {
              // If this would be worse than our best completed tour,
              // return false
              if (mileage + mileage_delta(c) > best_so_far.mileage) {
-#if DEBUG
+#if DFS_DEBUG
                  cout << "Not adding " << city_names[c]
                       << " -- mileage would be " << mileage + mileage_delta(c)
                       << " -- best is " << best_so_far.mileage << endl;
@@ -87,7 +87,7 @@ class Tour {
                  return false;
              }
              add_city(c);
-#if DEBUG
+#if DFS_DEBUG
              cout << "Added " << city_names[c] << endl;
              cout << "Tour is now " << *this;
 #endif
@@ -101,7 +101,7 @@ class Tour {
 
              // Subtract the mileage that c added to the cost
              mileage -= mileage_delta(c);
-#if DEBUG
+#if DFS_DEBUG
              cout << "Removed " << city_names[c] << endl;
              cout << "Tour is now " << *this;
 #endif
@@ -134,7 +134,7 @@ void DFS(Tour& t) {
     // the best tour
     if (t.get_num_cities() == num_cities) {
         best = t;
-#ifdef DEBUG
+#ifdef DFS_DEBUG
         cout << "New best:" << best;
 #endif
 
@@ -151,9 +151,11 @@ void DFS(Tour& t) {
     }
 }
 
-
+/*
 int main() { 
     Tour t;              // create an initial tour
     DFS(t);
     cout << best;
 }
+ */
+

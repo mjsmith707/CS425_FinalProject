@@ -30,7 +30,7 @@ class TravellingSalesman {
         
         // Node cost
         size_t cost;
-    
+        
         // Heuristic cost
         size_t heuristic;
     
