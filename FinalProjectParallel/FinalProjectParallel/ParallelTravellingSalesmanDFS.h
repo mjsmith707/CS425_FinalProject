@@ -5,6 +5,8 @@
 #include <unordered_set>
 #include <queue>
 #include <thread>
+#include <atomic>
+#include <bitset>
 #include "cities.h"
 #include "SharedQueue.h"
 
@@ -128,7 +130,7 @@ public:
     void DFS(Tour& t, Tour& best, std::atomic<unsigned int>* sharedBound);
     
     // function to call for
-    Tour runParallelDFS(unsigned int initialCity);
+    Tour runParallelDFS(unsigned int initialCity, unsigned int N_THREADS);
     void RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, Tour>>* taskQueue, std::vector<Tour>* sharedResults, std::atomic<unsigned int>* sharedBound);
     
     

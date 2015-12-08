@@ -8,10 +8,9 @@
 
 #include "ParallelTravellingSalesmanDFS.h"
 
-#define N_THREADS 4
 #define N_TASKS_PER_THREAD 10
 
-ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDFS(unsigned int initialCity){
+ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDFS(unsigned int initialCity, unsigned int N_THREADS){
     ParallelTravellingSalesmanDFS::Tour firstNode;
     ParallelTravellingSalesmanDFS::Tour node;
     std::queue<ParallelTravellingSalesmanDFS::Tour> frontier;
