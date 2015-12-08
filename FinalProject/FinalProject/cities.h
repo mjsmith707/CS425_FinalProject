@@ -6,7 +6,7 @@ using namespace std;
 
 /* debug flag */
 #define DEBUG 1
-#define CITIES_SIZE_20
+#define CITIES_SIZE_10
 
 /* City parameters to set up:
  * can do this automatically using Python script

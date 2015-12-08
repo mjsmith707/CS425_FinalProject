@@ -75,13 +75,13 @@ int main(int argc, const char * argv[]) {
     
     std::cout << std::endl << "======Max's Parallel UCS B&B Result======" << std::endl;
     startTime = std::chrono::high_resolution_clock::now();
-    auto result = graphSearch.ParallelUniformCostSearchBnB(start, start);
+    //auto result = graphSearch.ParallelUniformCostSearchBnB(start, start);
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
     std::cout << "Duration: " << duration.count() << ", Explored Size: " << graphSearch.getLastExploredCount() << std::endl;
-    for (size_t i=0; i<result.size(); i++) {
-        result.at(i).printNode();
-    }
+    //for (size_t i=0; i<result.size(); i++) {
+    //    result.at(i).printNode();
+    //}
     /*
     // My impl
     ParallelSearch<TravellingSalesman> parallelSearch;
