@@ -91,11 +91,11 @@ ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDF
     return solution;
 }
 
+// Thread entry point
 void ParallelTravellingSalesmanDFS::RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour>>* taskQueue, std::vector<ParallelTravellingSalesmanDFS::Tour>* sharedResults, std::atomic<unsigned int>* sharedBound){
     while(!taskQueue->isEmpty()){
-        
         // try-catch because there's a potential race between the isEmpty() and the pop
-        try{
+        try {
             std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour> currentTaskNode = taskQueue->pop();
             ParallelTravellingSalesmanDFS::Tour localTour = currentTaskNode.second;
             ParallelTravellingSalesmanDFS::Tour localBest(*sharedBound);
@@ -106,14 +106,14 @@ void ParallelTravellingSalesmanDFS::RunAgainstTaskQueue(Shared_Queue<std::pair<u
             unsigned int localBound = localBest.getMileage();
             unsigned int prevBound = *sharedBound;
             while ((prevBound > localBound) && (!(*sharedBound).compare_exchange_weak(prevBound, localBound)));
-        } catch(std::runtime_error e){
-            
+        } catch(std::runtime_error e) {
             // nothing left in the task queue, so this thread can leave
             return;
         }
     }
 }
 
+// Recursive depth first search
 void ParallelTravellingSalesmanDFS::DFS(ParallelTravellingSalesmanDFS::Tour& t, ParallelTravellingSalesmanDFS::Tour& best, std::atomic<unsigned int>* sharedBound) {
     if (!t.better_than(best, sharedBound)) return; // if we've already seen something better
     if (t.get_num_cities() == num_cities) {
@@ -131,4 +131,3 @@ void ParallelTravellingSalesmanDFS::DFS(ParallelTravellingSalesmanDFS::Tour& t, 
         }
     }
 }
-

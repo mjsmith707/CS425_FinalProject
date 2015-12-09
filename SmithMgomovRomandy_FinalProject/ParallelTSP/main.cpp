@@ -14,7 +14,7 @@
 #include "SerialTravellingSalesmanDFS.h"
 #include "ParallelTravellingSalesmanDFS.h"
 
-// #undef to generate csv output
+// Remove to generate csv output
 #define VERBOSE
 
 // Remove to disable parallel implementation
@@ -49,15 +49,17 @@ int main(int argc, const char * argv[]) {
     ParallelTravellingSalesmanDFS::Tour solution = demoRun.runParallelDFS(N_THREADS);
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
-#ifdef VERBOSE
+
+  #ifdef VERBOSE
     std::cout << "num_cities: " << num_cities << ", N_THREADS: " << N_THREADS << std::endl;
-    std::cout << std::endl << "======Max Parallel Given DFS serial implementation======" << std::endl;
+    std::cout << std::endl << "======Parallel Given DFS serial implementation======" << std::endl;
     std::cout << "Duration: " << duration.count();
     std::cout << solution << std::endl;
-#else
+  #else
     std::cout << "0," << N_THREADS << "," << num_cities;
     std::cout << "," << duration.count() << std::endl;
-#endif
+  #endif
+
 #endif
 
 #ifdef SERIAL
@@ -67,14 +69,15 @@ int main(int argc, const char * argv[]) {
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
 
-#ifdef VERBOSE
+  #ifdef VERBOSE
     std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
     std::cout << "Duration: " << duration.count();
     std::cout << best << std::endl;
-#else
+  #else
     std::cout << "1," << N_THREADS << "," << num_cities;
     std::cout << "," << duration.count() << std::endl;
-#endif
+  #endif
+
 #endif
 
     return 0;
