@@ -46,16 +46,16 @@ int main(int argc, const char * argv[]) {
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
     //std::cout << "Duration: " << duration.count();
     std::cout << "," << duration.count();
-    //std::cout << finalSolution << std::endl;
+    std::cout << finalSolution << std::endl;
     
-    //std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
+    std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
     startTime = std::chrono::high_resolution_clock::now();
     Tour t;
     DFS(t);
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
     //std::cout << "Duration: " << duration.count();
-    //std::cout << best << std::endl;
+    std::cout << best << std::endl;
     std::cout << "," << duration.count() << std::endl;
 
     return 0;

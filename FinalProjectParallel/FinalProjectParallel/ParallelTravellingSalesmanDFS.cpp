@@ -13,6 +13,7 @@
 ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDFS(unsigned int initialCity, unsigned int N_THREADS){
     ParallelTravellingSalesmanDFS::Tour firstNode;
     ParallelTravellingSalesmanDFS::Tour node;
+    ParallelTravellingSalesmanDFS::Tour bfsbest(UINT_MAX);
     std::queue<ParallelTravellingSalesmanDFS::Tour> frontier;
     frontier.push(firstNode);
     
@@ -22,6 +23,11 @@ ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDF
         node = (frontier.front());
         frontier.pop();
         
+        if(node.get_num_cities() == num_cities && node.better_than(bfsbest)){
+            bfsbest = node;
+        }
+
+        
         for(int i = 0; i < num_cities && frontier.size() < sizeOfTaskQueue; i++){
             if(!node.is_present(i)){
                 ParallelTravellingSalesmanDFS::Tour neighbor = node;
@@ -29,6 +35,10 @@ ParallelTravellingSalesmanDFS::Tour ParallelTravellingSalesmanDFS::runParallelDF
                 frontier.push(neighbor);
             }
         }
+    }
+    
+    if (bfsbest.getMileage() != UINT_MAX) {
+        return bfsbest;
     }
     
     Shared_Queue<std::pair<unsigned int, ParallelTravellingSalesmanDFS::Tour>> taskQueue;
