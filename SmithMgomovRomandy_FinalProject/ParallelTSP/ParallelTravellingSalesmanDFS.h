@@ -1,3 +1,13 @@
+/*
+ * CS425 Final Project
+ * Matt Smith, Reuben Romandy, Maksim Gomov
+ * ParallelTravellingSalesmanDFS.h
+ * 
+ * Header for the parallel travelling salesman implementation. Contains the derivative
+ * implementation of what's in the SerialTravellingSalesman class with shared upper bounding and
+ * the signatures for the supporting parallel functions.
+ */
+
 #include <iostream>
 #include <vector>
 #include <climits>
@@ -37,13 +47,11 @@ public:
         }
         
         // ----- Accessors -----
-        
         unsigned int get_num_cities() { return cities.size(); }
         
         // Returns True if City c is in the tour
         bool is_present(unsigned int c) {
             return contains[c] == 1;
-            //return (find(cities.begin(), cities.end(), c) != cities.end());
         }
         
         
@@ -129,8 +137,8 @@ public:
     // slightly modified serial DFS implementation
     void DFS(Tour& t, Tour& best, std::atomic<unsigned int>* sharedBound);
     
-    // function to call for
-    Tour runParallelDFS(unsigned int initialCity, unsigned int N_THREADS);
+    // function to call for 
+    Tour runParallelDFS(unsigned int N_THREADS);
     void RunAgainstTaskQueue(Shared_Queue<std::pair<unsigned int, Tour>>* taskQueue, std::vector<Tour>* sharedResults, std::atomic<unsigned int>* sharedBound);
     
     

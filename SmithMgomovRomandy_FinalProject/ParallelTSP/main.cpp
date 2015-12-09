@@ -1,10 +1,11 @@
-//
-//  main.cpp
-//  FinalProject
-//
-//  Created by Matt on 11/27/15.
-//  Copyright (c) 2015 Matt. All rights reserved.
-//
+/*
+ * CS425 Final Project
+ * Matt Smith, Reuben Romandy, Maksim Gomov
+ * Main.cpp
+ * 
+ * The main program, contains code for outputting in the CSV format we used for our data 
+ * collection.
+ */
 
 #include <iostream>
 #include <algorithm>

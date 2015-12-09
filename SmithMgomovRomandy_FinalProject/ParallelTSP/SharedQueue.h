@@ -1,10 +1,10 @@
-//
-//  SharedQueue.h
-//  FinalProject
-//
-//  Created by Max on 12/3/15.
-//  Copyright (c) 2015 Matt. All rights reserved.
-//
+/*
+ * CS425 Final Project
+ * Matt Smith, Reuben Romandy, Maksim Gomov
+ * SharedQueue.h
+ * 
+ * A concurrent queue implementation, used for the task queue in ParallelTravellingSalesman.
+ */
 
 #ifndef __Shared_Queue__
 #define __Shared_Queue__

@@ -1,10 +1,11 @@
-//
-//  SerialTravellingSalesmanDFS.cpp
-//  FinalProjectParallel
-//
-//  Created by Max on 12/7/15.
-//  Copyright (c) 2015 Matt. All rights reserved.
-//
+/*
+ * CS425 Final Project
+ * Matt Smith, Reuben Romandy, Maksim Gomov
+ * SerialTravellingSalesmanDFS.cpp
+ * 
+ * Implementation for SerialTravellingSalesmanDFS.h header, is essentially the given
+ * tsp_serial_recursive.cpp with one performance adjustment (std::bitset contains).
+ */
 
 #include <stdio.h>
 #include "SerialTravellingSalesmanDFS.h"
