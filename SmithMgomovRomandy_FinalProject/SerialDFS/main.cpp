@@ -15,7 +15,9 @@
 #include "cities.h"
 
 #define GOALCITY 0
-#undef VERBOSE
+
+// #undef to enable csv output
+#define VERBOSE
 
 typedef struct Node {
     unsigned int city;
@@ -85,9 +87,10 @@ void dfs(std::shared_ptr<Node> start) {
         }
     }
 #ifdef VERBOSE
+    std::cout << "num_cities: " << num_cities << std::endl;
     if ((best != nullptr) && (best->previous != nullptr)) {
         while (best != nullptr) {
-            std::cout << "City: " << city_names[best->city] << ", Cost: " << best->cost << " Previous Cities: " << (best->previousCities & 0xFFFFFFFFul) << std::endl;
+            std::cout << "City: " << city_names[best->city] << ", Cost: " << best->cost << std::endl;
             best = best->previous;
         }
     }

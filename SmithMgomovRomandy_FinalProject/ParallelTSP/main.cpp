@@ -14,6 +14,15 @@
 #include "SerialTravellingSalesmanDFS.h"
 #include "ParallelTravellingSalesmanDFS.h"
 
+// #undef to generate csv output
+#define VERBOSE
+
+// Remove to disable parallel implementation
+#define PARALLEL
+
+// Remove to disable serial implementation
+#define SERIAL
+
 static unsigned int N_THREADS;
 
 typedef std::chrono::high_resolution_clock::time_point timept_t;
@@ -32,30 +41,41 @@ int main(int argc, const char * argv[]) {
     timept_t startTime, endTime;
     timer_duration_t duration;
 
+#ifdef PARALLEL
+    startTime = std::chrono::high_resolution_clock::now();
+    ParallelTravellingSalesmanDFS::Tour bestTour(std::numeric_limits<unsigned int>::max());
+    ParallelTravellingSalesmanDFS::Tour startTour;
+    ParallelTravellingSalesmanDFS demoRun;
+    ParallelTravellingSalesmanDFS::Tour solution = demoRun.runParallelDFS(N_THREADS);
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
+#ifdef VERBOSE
+    std::cout << "num_cities: " << num_cities << ", N_THREADS: " << N_THREADS << std::endl;
+    std::cout << std::endl << "======Max Parallel Given DFS serial implementation======" << std::endl;
+    std::cout << "Duration: " << duration.count();
+    std::cout << solution << std::endl;
+#else
+    std::cout << "0," << N_THREADS << "," << num_cities;
+    std::cout << "," << duration.count() << std::endl;
+#endif
+#endif
 
-    //std::cout << "num_cities: " << num_cities << ", N_THREADS: " << N_THREADS << std::endl;
-    std::cout << "1," << N_THREADS << "," << num_cities;
-    //std::cout << std::endl << "======Max Parallel Given DFS serial implementation======" << std::endl;
-    //startTime = std::chrono::high_resolution_clock::now();
-    //ParallelTravellingSalesmanDFS::Tour bestTour(std::numeric_limits<unsigned int>::max());
-    //ParallelTravellingSalesmanDFS::Tour startTour;
-    //ParallelTravellingSalesmanDFS demoRun;
-    //ParallelTravellingSalesmanDFS::Tour finalSolution = demoRun.runParallelDFS(0, N_THREADS);
-    //endTime = std::chrono::high_resolution_clock::now();
-    //duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
-    //std::cout << "Duration: " << duration.count();
-    //std::cout << "," << duration.count() << std::endl;
-    //std::cout << finalSolution << std::endl;
-    
-    //std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
+#ifdef SERIAL
     startTime = std::chrono::high_resolution_clock::now();
     Tour t;
     DFS(t);
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::duration<double>>(endTime - startTime);
-    //std::cout << "Duration: " << duration.count();
-    //std::cout << best << std::endl;
+
+#ifdef VERBOSE
+    std::cout << std::endl << "======Given DFS serial implementation======" << std::endl;
+    std::cout << "Duration: " << duration.count();
+    std::cout << best << std::endl;
+#else
+    std::cout << "1," << N_THREADS << "," << num_cities;
     std::cout << "," << duration.count() << std::endl;
+#endif
+#endif
 
     return 0;
 }
