@@ -3,9 +3,8 @@
  * Matt Smith, Reuben Romandy, Maksim Gomov
  * ParallelTravellingSalesmanDFS.h
  * 
- * Header for the parallel travelling salesman implementation. Contains the derivative
- * implementation of what's in the SerialTravellingSalesman class with shared upper bounding and
- * the signatures for the supporting parallel functions.
+ * Header for the parallel travelling salesman implementation. Contains the derivative 
+ * implementation of the provided tsp_serial_recursive.cpp, modified for parallel execution.
  */
 
 #include <iostream>
